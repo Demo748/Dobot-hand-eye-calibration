@@ -9,35 +9,65 @@ dobot = DobotMagician();
 %%
 dobot.InitaliseRobot();
 %% set joint
-joint_target = [0.0,0.4,0.0,0.0];
+joint_target = [pi/4, pi/6, pi/4, pi/2, 0;];
 dobot.PublishTargetJoint(joint_target);
 
 %% Publish custom end effector pose
-end_effector_position = [0.2,0,0.05];
+end_effector_position = [0.2,-0.01,0.15];
 end_effector_rotation = [0,0,0];
 dobot.PublishEndEffectorPose(end_effector_position,end_effector_rotation);
 
 %% record images at dif positions
 end_effector_matrix = [ 0.2,0.0,0.1;
                         0.2,0.0,0.15;
-                        0.2,0.0,0.1;
-                        0.3,0.0,0.1;
-                        0.2,-0.1,0.15;
-                        0.2,0.1,0.1;
-                        0.3,0.05,0.1;
-                        0.25,0.1,0.15;
-                        0.25,-0.05,0.05;
-                        0.25,-0.1,0.1;
+                        0.2,0.03,0.15;
+                        0.2,-0.02,0.15;
+                        0.2,-0.05,0.15;
+                        0.2,0.05,0.1;
+                        0.195,0.01,0.15;
+                        0.195,0.02,0.15;
+                        0.2,-0.03,0.1;
+                        0.2,-0.01,0.15;
                       ];
+% 
+% end_effector_matrix = [ % 63.5cm away x direction, 11.5cm camera height centre
+%     0, pi/4, pi/4, pi/2, 0;
+%     0, pi/6, pi/4, pi/2, 0;
+%     % pi/4, pi/4, pi/4, pi/2, 0;
+%     % pi/4, pi/6, pi/4, pi/2, 0;
+%     pi/6, pi/4, pi/4, pi/2, 0;
+%     pi/6, pi/6, pi/4, pi/2, 0;
+%     pi/8, pi/4, pi/4, pi/2, 0;
+%     pi/8, pi/6, pi/4, pi/2, 0;
+%     -pi/4, pi/4, pi/4, pi/2, 0;
+%     -pi/4, pi/6, pi/4, pi/2, 0;
+%     -pi/6, pi/4, pi/4, pi/2, 0;
+%     -pi/6, pi/6, pi/4, pi/2, 0;
+%     -pi/8, pi/4, pi/4, pi/2, 0;
+%     -pi/8, pi/6, pi/4, pi/2, 0;
+% ];
+
+% end_effector_matrix = [ 0.2,0.0,0.1;
+%                         0.2,0.0,0.1;
+%                         0.2,0.0,0.1;
+%                         0.3,0.0,0.1;
+%                         0.2,-0.1,0.0;
+%                         0.2,0.1,0.0;
+%                         0.3,0.05,0.0;
+%                         0.25,0.1,-0.1;
+%                         0.25,-0.05,-0.1;
+%                         0.25,-0.1,-0.1;
+%                       ];
 image_matrix = [];
 cameraRgbSub = rossubscriber('/camera/color/image_raw');
 pause(2);
 
 for i = 1:size(end_effector_matrix)
     dobot.PublishEndEffectorPose(end_effector_matrix(i,:),end_effector_rotation)
+    %dobot.PublishTargetJoint(end_effector_matrix(i,:));
     image_data = readImage(cameraRgbSub.LatestMessage);
     image_matrix = [image_matrix;{image_data}];
-    imwrite(image_matrix{i},strcat('/images/image',num2str(i),'.png'));
+    imwrite(image_matrix{i},strcat('cameraEffector/image',num2str(i),'.png'));
     pause(3);
 end
 %%
@@ -45,7 +75,7 @@ for i = 1:size(image_matrix)
     f1 = figure
     hold on
     imshow(image_matrix{i});
-    % images_h = imshow(image_matrix{i});
+    images_h = imshow(image_matrix{i});
     %imwrite(image_matrix{i},strcat('image',num2str(i),'.png'));
 end
 
