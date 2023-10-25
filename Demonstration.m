@@ -10,13 +10,13 @@ pause(1)
 dobot = DobotMagician();
 pause(6)
 %%
-dobot.InitaliseRobot;
+% dobot.InitaliseRobot;
 
 %% Publish custom end effector pose
 end_effector_position = [0.2,0.0,0.1];
 end_effector_rotation = [0,0,0];
 dobot.PublishEndEffectorPose(end_effector_position,end_effector_rotation);
-pause(2)
+pause(3)
 dobot.GetCurrentJointState
 %%
 % joint_target = [pi/4, pi/6, pi/4, pi/2, 0;];
@@ -175,12 +175,12 @@ while 1
 
     %%
     current_joints = dobot.GetCurrentJointState;
-    joint_target = [current_joints(1) - Vc(1)*0.05, current_joints(2), current_joints(3), current_joints(4)]
+    joint_target = [current_joints(1) - Vc(1)*0.1, current_joints(2), current_joints(3), current_joints(4)]
 
-    if joint_target(1) > deg2rad(135)
-        joint_target(1) = deg2rad(135);
-    elseif joint_target(1) < deg2rad(-135)
-        joint_target(1) = deg2rad(-135);
+    if joint_target(1) > deg2rad(120)
+        joint_target(1) = deg2rad(120);
+    elseif joint_target(1) < deg2rad(-120)
+        joint_target(1) = deg2rad(-120);
     end
     if joint_target(2) > deg2rad(80)
         joint_target(2) = deg2rad(80);
@@ -197,6 +197,10 @@ while 1
     elseif joint_target(4) < deg2rad(-85)
         joint_target(4) = deg2rad(-85);
     end
+    
+    % if abs(joint_target(1) - current_joints(1)) < 0.1
+    %     joint_target(1) = current_joints(1);
+    % end
 
     new_joint_target = joint_target
     dobot.PublishTargetJoint(joint_target);
