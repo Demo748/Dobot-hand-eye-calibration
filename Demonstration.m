@@ -1,15 +1,15 @@
-clc
-clear all
-close all
-rosshutdown
-pause(1)
-%%
-rosinit
-pause(1)
-%%
-dobot = DobotMagician();
-pause(6)
-%%
+% clc
+% clear all
+% close all
+% rosshutdown
+% pause(1)
+% %%
+% rosinit
+% pause(1)
+% %%
+% dobot = DobotMagician();
+% pause(6)
+% %%
 % dobot.InitaliseRobot;
 
 %% Publish custom end effector pose
@@ -34,7 +34,7 @@ imshow(image_data);
 % image_h = imshow(image_data);
 [cornerPoints,boardSize] = detectCheckerboardPoints(image_data);
 
-pattern_effector = 1; % change to match camera setup, 0 or 1
+pattern_effector = 0; % change to match camera setup, 0 or 1
 
 switch pattern_effector
     case 0
@@ -116,6 +116,17 @@ imageSize = [size(I,1) size(I,2)];
 params = estimateCameraParameters(imagePoints,worldPoints, ...
                                   'ImageSize',imageSize);
 
+for i = 1:size(imageFiles)
+    figure
+    hold on
+    image_h = imshow(imageFiles{i});
+    [imagePoints,boardSize] = detectCheckerboardPoints(image_h.CData);
+    J = insertText(image_h.CData,imagePoints,1:size(imagePoints,1));
+    J = insertMarker(J,imagePoints,'o','MarkerColor','red','Size',5);
+    % imshow(J);
+    image_h.CData = J;
+    title(sprintf('Detected a %d x %d Checkerboard',boardSize));
+end
 %% Main visual servo loop
 while 1
     image_data = readImage(cameraRgbSub.LatestMessage);
@@ -175,6 +186,7 @@ while 1
 
     %%
     current_joints = dobot.GetCurrentJointState;
+    pause(0.5);
     joint_target = [current_joints(1) - Vc(1)*0.1, current_joints(2), current_joints(3), current_joints(4)]
 
     if joint_target(1) > deg2rad(120)
