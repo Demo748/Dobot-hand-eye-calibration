@@ -6,6 +6,8 @@ rosshutdown
 rosinit
 %%
 dobot = DobotMagician();
+%%
+dobot.InitaliseRobot;
 
 %% Publish custom end effector pose
 end_effector_position = [0.2,0.0,0.1];
@@ -76,7 +78,7 @@ while 1
 
     %%
     current_joints = dobot.GetCurrentJointState;
-    joint_target = [current_joints(1) - Vc(1)*0.1, current_joints(2), current_joints(3), current_joints(4)]
+    joint_target = [current_joints(1) - Vc(1)*0.05, current_joints(2), current_joints(3), current_joints(4)]
 
     if joint_target(1) > deg2rad(135)
         joint_target(1) = deg2rad(135);
@@ -101,7 +103,7 @@ while 1
 
     %joint_target
     dobot.PublishTargetJoint(joint_target);
-    pause(3);
+    pause(0.75);
 
 end
 
