@@ -10,4 +10,8 @@ The main file that runs the project demonstration all in one. Performs calibrati
 
 **Main.m** assuming calibration has already been performed/camera parameters generated and present in the workspace, this can be run to test visual servoing of Dobot following of the camera
 
+**cameraParams.m** generates camera parameters based off the images in the specified path, configurable inside the script, and visualises the checkerboard detection ontop of the images
+
+**camera.m** (testing file) moves Dobot to specified poses, saves images, runs basic checkerboard detection
+
 Other matlab scripts were all used in testing/experimenting and built upon to create the final demonstration.m file. E.g. testing movement of dobot, testing image capture of camera, generating calibration parameters off of preloaded images, calibration portion of the code, main loop code, etc.
